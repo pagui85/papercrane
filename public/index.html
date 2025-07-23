@@ -1,4 +1,16 @@
-function onSuccess(token) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dan is in Japapn Redirect</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body style="background-color:#3e3e42;">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABmLTubYLRlBP-cJ" data-callback="onSuccess"></div>
+    <script>
+        function onSuccess(token) {
     fetch('https://papercrane.dan-papuga.workers.dev', {
         method: 'POST',
         headers: {
@@ -25,3 +37,6 @@ function onSuccess(token) {
         alert('An error occurred: ' + error.message);
     });
 }
+    </script>
+</body>
+</html>
