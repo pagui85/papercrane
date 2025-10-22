@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Paper Crane Project</title>
 
-  <!-- Turnstile script -->
+  <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <style>
@@ -48,26 +48,24 @@
 <body>
 
   <div class="card">
-    <!-- Turnstile verify form: browser will POST to /__ts_verify and follow Worker redirect -->
+    <!-- Browser posts to /__ts_verify; Worker sets cookie & redirects -->
     <form id="verify" action="/__ts_verify" method="POST">
       <!-- Worker uses this to send you back to the same place -->
-      <input type="hidden" name="dest" id="dest-field" value="" />
-      <!-- The Turnstile widget (no data-callback needed) -->
+      <input type="hidden" name="dest" id="dest-field" value="">
+      <!-- Turnstile widget (no callback needed) -->
       <div class="cf-turnstile" data-sitekey="0x4AAAAAABmLTubYLRlBP-cJ"></div>
       <p style="margin-top:.8rem">
         <button type="submit">Continue</button>
       </p>
-      <noscript>
-        <p style="color:#ffb4b4">Please enable JavaScript to continue.</p>
-      </noscript>
+      <noscript><p style="color:#ffb4b4">Please enable JavaScript to continue.</p></noscript>
     </form>
   </div>
 
-  <!-- Paper crane logo (place paperCrane_white.png in your repo's public/ folder) -->
+  <!-- Logo served from public/ -->
   <img src="/paperCrane_white.png" alt="Paper Crane Drawing" class="crane" />
 
   <script>
-    // Fill "dest" with current path+query so the Worker can redirect back after success
+    // Fill dest so the Worker can redirect back after success
     (function () {
       var f = document.getElementById('dest-field');
       if (f) f.value = location.pathname + location.search;
