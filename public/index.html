@@ -1,62 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="noindex">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paper Crane Project</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <style>
-        body {
-            background-color: #3e3e42;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .crane {
-            margin-top: 20px;  /* space below Turnstile */
-            width: 450px;      /* adjust size */
-            opacity: 0.8;      /* slight transparency */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paper Crane Project</title>
+
+  <!-- Turnstile script -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <style>
+    body {
+      background-color: #3e3e42;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .card {
+      background: #2b2b2f;
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      text-align: center;
+    }
+    .crane {
+      margin-top: 20px;
+      width: 450px;
+      opacity: 0.8;
+    }
+    button {
+      padding: .6rem 1rem;
+      border: 0;
+      border-radius: 8px;
+      background:#6ea8fe;
+      color:#111;
+      font-weight:600;
+      cursor:pointer;
+    }
+    button:hover { filter: brightness(1.06); }
+  </style>
 </head>
 <body>
-    <!-- Turnstile verification widget -->
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAABmLTubYLRlBP-cJ" data-callback="onSuccess"></div>
 
-    <!-- Paper crane below the Turnstile -->
-    <img src="/paperCrane_white.png" alt="Paper Crane Drawing" class="crane">
+  <div class="card">
+    <!-- Turnstile verify form: browser will POST to /__ts_verify and follow Worker redirect -->
+    <form id="verify" action="/__ts_verify" method="POST">
+      <!-- Worker uses this to send you back to the same place -->
+      <input type="hidden" name="dest" id="dest-field" value="" />
+      <!-- The Turnstile widget (no data-callback needed) -->
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAABmLTubYLRlBP-cJ"></div>
+      <p style="margin-top:.8rem">
+        <button type="submit">Continue</button>
+      </p>
+      <noscript>
+        <p style="color:#ffb4b4">Please enable JavaScript to continue.</p>
+      </noscript>
+    </form>
+  </div>
 
-    <script>
-        // The callback function for the Turnstile verification
-        function onSuccess(token) {
-            fetch('/__ts_verify', {  // Use your Worker endpoint here
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    'cf-turnstile-response': token,
-                }),
-            })
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    window.location.href = 'https://operationpapercrane.com';  // Redirect to your desired page after verification
-                } else {
-                    alert('Verification failed: ' + JSON.stringify(data));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred: ' + error.message);
-            });
-        }
-    </script>
+  <!-- Paper crane logo (place paperCrane_white.png in your repo's public/ folder) -->
+  <img src="/paperCrane_white.png" alt="Paper Crane Drawing" class="crane" />
+
+  <script>
+    // Fill "dest" with current path+query so the Worker can redirect back after success
+    (function () {
+      var f = document.getElementById('dest-field');
+      if (f) f.value = location.pathname + location.search;
+    })();
+  </script>
 </body>
 </html>
