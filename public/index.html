@@ -5,6 +5,7 @@
   <meta name="robots" content="noindex" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Paper Crane Project</title>
+  <!-- (Optional) Turnstile script; Worker can inject it too, but keeping it here is fine -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     body {
@@ -23,12 +24,12 @@
 <body>
 
   <div class="card" style="text-align:center">
-    <!-- Turnstile verify form: Worker handles POST at /__ts_verify -->
+    <!-- Verify form: Worker handles POST at /__ts_verify -->
     <form id="verify" action="/__ts_verify" method="POST">
-      <!-- Worker will fill this with the current URL so you return to same place -->
+      <!-- Worker fills with current path+query so you return to the same place -->
       <input type="hidden" name="dest" value="" id="dest-field" />
-      <!-- Turnstile widget -->
-      <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY"></div>
+      <!-- Worker will inject the Turnstile widget here -->
+      <div id="turnstile-slot"></div>
       <p style="margin-top: .8rem;">
         <button type="submit">Continue</button>
       </p>
@@ -40,7 +41,7 @@
 
   <script>
     // Fill dest with the current path+query so the Worker can redirect back
-    (function(){
+    (function () {
       var destField = document.getElementById('dest-field');
       if (destField) destField.value = location.pathname + location.search;
     })();
