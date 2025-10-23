@@ -7,8 +7,7 @@
   <title>Paper Crane Project</title>
 
   <!-- Cloudflare Turnstile -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer cache="no-store"></script>
-
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?v=1" async defer></script>
 
   <style>
     body {
@@ -41,7 +40,7 @@
     <form id="verify" action="/__ts_verify" method="POST">
       <input type="hidden" name="dest" id="dest-field" value="">
       <!-- Use your NEW site key here (the same you put in the Worker env) -->
-      <div class="cf-turnstile" data-sitekey="YOUR_NEW_SITE_KEY"></div>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
       <p style="margin-top:.8rem"><button type="submit">Continue</button></p>
       <noscript><p style="color:#ffb4b4">Please enable JavaScript to continue.</p></noscript>
     </form>
