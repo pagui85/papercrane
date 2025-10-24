@@ -31,38 +31,19 @@
       background:#6ea8fe; color:#111; font-weight:600; cursor:pointer;
     }
     button:hover { filter: brightness(1.06); }
-
-    /* Hide the form completely and remove the box around the widget */
-    #verify {
-      display: none;
-    }
-
-    .turnstile-widget {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Loading text style */
-    .loading-text {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <!-- Cloudflare Turnstile widget -->
+    <!-- Browser posts to /__ts_verify; Worker sets cookie & redirects -->
     <form id="verify" action="/__ts_verify" method="POST">
       <input type="hidden" name="dest" id="dest-field" value="">
-      <div class="cf-turnstile turnstile-widget" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
+      <!-- Use your NEW site key here (the same you put in the Worker env) -->
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
+      <p style="margin-top:.8rem"><button type="submit">Continue</button></p>
       <noscript><p style="color:#ffb4b4">Please enable JavaScript to continue.</p></noscript>
     </form>
-
-    <!-- Loading message while verifying -->
-    <p class="loading-text" id="loadingMessage" style="display:none;">Verifying... Please wait.</p>
   </div>
 
   <!-- Logo from public/ -->
@@ -75,24 +56,16 @@
       if (f) f.value = location.pathname + location.search;
     })();
 
-    // Automatically submit the form once the Turnstile widget is validated
-    document.addEventListener('turnstile:ready', function () {
-      // This ensures the widget is visible and ready to trigger
-      document.getElementById('loadingMessage').style.display = 'none';
-      document.getElementById('verify').style.display = 'block';
-    });
-
-    document.addEventListener('turnstile:verified', function() {
-      // Hide the form and show the loading text
-      document.getElementById('verify').style.display = 'none';
-      document.getElementById('loadingMessage').style.display = 'block';
-      
-      // After a short delay (allowing verification), redirect the user
-      setTimeout(function() {
-        window.location.href = document.getElementById('dest-field').value || '/';
-      }, 2000); // Adjust the delay as necessary
-    });
-
+    // This ensures that the Turnstile widget is rendered properly
+    window.onload = function() {
+      const widget = document.querySelector('.cf-turnstile');
+      if (widget && window.turnstile) {
+        // Initialize the Turnstile widget if it's not automatically done
+        window.turnstile.render(widget);
+      } else {
+        console.error('Turnstile widget did not load correctly');
+      }
+    };
   </script>
 </body>
 </html>
