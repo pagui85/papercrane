@@ -56,14 +56,14 @@
       if (f) f.value = location.pathname + location.search;
     })();
 
-    // This ensures that the Turnstile widget is rendered properly
+    // The Turnstile widget should now render automatically
     window.onload = function() {
       const widget = document.querySelector('.cf-turnstile');
       if (widget && window.turnstile) {
-        // Initialize the Turnstile widget if it's not automatically done
-        window.turnstile.render(widget);
+        // No need to call render again, just make sure it is visible
+        console.log('Turnstile is ready.');
       } else {
-        console.error('Turnstile widget did not load correctly');
+        console.error('Turnstile widget failed to load correctly.');
       }
     };
   </script>
