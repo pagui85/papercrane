@@ -31,6 +31,17 @@
       background:#6ea8fe; color:#111; font-weight:600; cursor:pointer;
     }
     button:hover { filter: brightness(1.06); }
+
+    /* Hide the form once verified */
+    #verify {
+      display: none;
+    }
+
+    /* Add a minimal style to make it smoother */
+    .loading-text {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
@@ -41,9 +52,11 @@
       <input type="hidden" name="dest" id="dest-field" value="">
       <!-- Use your NEW site key here (the same you put in the Worker env) -->
       <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
-      <p style="margin-top:.8rem"><button type="submit">Continue</button></p>
       <noscript><p style="color:#ffb4b4">Please enable JavaScript to continue.</p></noscript>
     </form>
+
+    <!-- Loading message -->
+    <p class="loading-text" id="loadingMessage">Verifying... Please wait.</p>
   </div>
 
   <!-- Logo from public/ -->
@@ -55,6 +68,18 @@
       var f = document.getElementById('dest-field');
       if (f) f.value = location.pathname + location.search;
     })();
+
+    // Redirect the user after a successful validation
+    document.getElementById('verify').addEventListener('submit', function() {
+      // Hide the form during verification
+      document.getElementById('verify').style.display = 'none';
+      document.getElementById('loadingMessage').style.display = 'block';
+
+      // After successful validation, this will auto-redirect
+      setTimeout(function() {
+        window.location.href = document.getElementById('dest-field').value || '/';
+      }, 2000); // Adjust the delay if necessary
+    });
   </script>
 </body>
 </html>
