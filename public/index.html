@@ -32,12 +32,19 @@
     }
     button:hover { filter: brightness(1.06); }
 
-    /* Hide the form once verified */
+    /* Hide the form completely and remove the box around the widget */
     #verify {
       display: none;
     }
 
-    /* Add a minimal style to make it smoother */
+    .turnstile-widget {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Loading text style */
     .loading-text {
       margin-top: 1rem;
       font-size: 1.2rem;
@@ -47,16 +54,15 @@
 <body>
 
   <div class="card">
-    <!-- Browser posts to /__ts_verify; Worker sets cookie & redirects -->
+    <!-- Cloudflare Turnstile widget -->
     <form id="verify" action="/__ts_verify" method="POST">
       <input type="hidden" name="dest" id="dest-field" value="">
-      <!-- Use your NEW site key here (the same you put in the Worker env) -->
-      <div class="cf-turnstile" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
+      <div class="cf-turnstile turnstile-widget" data-sitekey="0x4AAAAAAB8IYFvJyB9ALnHK"></div>
       <noscript><p style="color:#ffb4b4">Please enable JavaScript to continue.</p></noscript>
     </form>
 
-    <!-- Loading message -->
-    <p class="loading-text" id="loadingMessage">Verifying... Please wait.</p>
+    <!-- Loading message while verifying -->
+    <p class="loading-text" id="loadingMessage" style="display:none;">Verifying... Please wait.</p>
   </div>
 
   <!-- Logo from public/ -->
@@ -64,22 +70,4 @@
 
   <script>
     // Let the Worker send you back to the same path after success
-    (function () {
-      var f = document.getElementById('dest-field');
-      if (f) f.value = location.pathname + location.search;
-    })();
-
-    // Redirect the user after a successful validation
-    document.getElementById('verify').addEventListener('submit', function() {
-      // Hide the form during verification
-      document.getElementById('verify').style.display = 'none';
-      document.getElementById('loadingMessage').style.display = 'block';
-
-      // After successful validation, this will auto-redirect
-      setTimeout(function() {
-        window.location.href = document.getElementById('dest-field').value || '/';
-      }, 2000); // Adjust the delay if necessary
-    });
-  </script>
-</body>
-</html>
+    (fu
