@@ -50,22 +50,33 @@
   <img src="/paperCrane_white.png" alt="Paper Crane Drawing" class="crane" />
 
   <script>
-    // Let the Worker send you back to the same path after success
+    // Ensure the destination is properly set after the form is submitted
     (function () {
       var f = document.getElementById('dest-field');
       if (f) f.value = location.pathname + location.search;
     })();
 
-    // The Turnstile widget should now render automatically
-    window.onload = function() {
-      const widget = document.querySelector('.cf-turnstile');
-      if (widget && window.turnstile) {
-        // No need to call render again, just make sure it is visible
-        console.log('Turnstile is ready.');
+    // Once Turnstile is verified, auto-submit the form
+    document.addEventListener('turnstile:verified', function() {
+      console.log('Turnstile validated, submitting the form.');
+      document.getElementById('verify').submit();
+    });
+
+    // Listen for form submission and ensure successful redirection
+    document.getElementById('verify').addEventListener('submit', function(event) {
+      event.preventDefault();  // Prevent default form submission to handle it manually
+      
+      // Make sure the destination is correctly set
+      var dest = document.getElementById('dest-field').value;
+      console.log('Redirecting to: ', dest);
+
+      // Redirect if the destination is properly set
+      if (dest) {
+        window.location.href = dest;
       } else {
-        console.error('Turnstile widget failed to load correctly.');
+        console.error('Destination not set correctly!');
       }
-    };
+    });
   </script>
 </body>
 </html>
