@@ -75,7 +75,13 @@
       if (f) f.value = location.pathname + location.search;
     })();
 
-    // Automatically submit the form after validation is complete
+    // Automatically submit the form once the Turnstile widget is validated
+    document.addEventListener('turnstile:ready', function () {
+      // This ensures the widget is visible and ready to trigger
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('verify').style.display = 'block';
+    });
+
     document.addEventListener('turnstile:verified', function() {
       // Hide the form and show the loading text
       document.getElementById('verify').style.display = 'none';
