@@ -70,4 +70,23 @@
 
   <script>
     // Let the Worker send you back to the same path after success
-    (fu
+    (function () {
+      var f = document.getElementById('dest-field');
+      if (f) f.value = location.pathname + location.search;
+    })();
+
+    // Automatically submit the form after validation is complete
+    document.addEventListener('turnstile:verified', function() {
+      // Hide the form and show the loading text
+      document.getElementById('verify').style.display = 'none';
+      document.getElementById('loadingMessage').style.display = 'block';
+      
+      // After a short delay (allowing verification), redirect the user
+      setTimeout(function() {
+        window.location.href = document.getElementById('dest-field').value || '/';
+      }, 2000); // Adjust the delay as necessary
+    });
+
+  </script>
+</body>
+</html>
